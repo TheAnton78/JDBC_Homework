@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: migrations/scema_v2.sql
+      relativeToChangeLogFile: true
