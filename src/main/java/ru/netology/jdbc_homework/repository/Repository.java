@@ -1,37 +1,26 @@
 package ru.netology.jdbc_homework.repository;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.web.bind.annotation.RestController;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Repository
 public class Repository {
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final String sqlScript = read("script.sql");
-
-    public List<String> getProductName(String name){
-        Map<String, Object> params = new HashMap<>();
-        params.put("firstName", name);
-        System.out.println(params.get("firstName"));
-        List<String> productNames = namedParameterJdbcTemplate.query(sqlScript, params,
-                (reseultSet, rowNum) -> {
-                    return reseultSet.getString("product_name");
-        });
-        System.out.println(productNames);
-        return productNames;
-    }
+    @PersistenceContext
+    EntityManager entityManager;
 
     private static String read(String scriptFileName) {
         try (InputStream is = new ClassPathResource(scriptFileName).getInputStream();
@@ -40,5 +29,23 @@ public class Repository {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<String> getProductName(String name) {
+        List<?> result = entityManager.createQuery("SELECT order.productName FROM Order order \n" +
+                        "JOIN Customer customer ON customer = order.customer\n" +
+                        "where customer.name = ?1")
+                .setParameter(1, name).getResultList();
+
+
+//        Map<String, Object> params = new HashMap<>();
+//        params.put("firstName", name);
+//        System.out.println(params.get("firstName"));
+//        List<String> productNames = namedParameterJdbcTemplate.query(sqlScript, params,
+//                (reseultSet, rowNum) -> {
+//                    return reseultSet.getString("product_name");
+//        });
+//        System.out.println(productNames);
+        return (List<String>) result;
     }
 }

@@ -6,7 +6,7 @@ create table twoTables.CUSTOMERS(
         phone_number text
 );
 
-create table twoTables.ORDERS(
+create table public.ORDERS(
     id bigserial primary key not null,
     date text not null,
     customer_id bigint not null,
@@ -15,3 +15,5 @@ create table twoTables.ORDERS(
 
     foreign key (customer_id) references twoTables.CUSTOMERS (id)
 );
+
+alter table if exists orders add constraint FKb8tboo4d95mh8gavvovwbb7vg foreign key (customer_id) references customer;

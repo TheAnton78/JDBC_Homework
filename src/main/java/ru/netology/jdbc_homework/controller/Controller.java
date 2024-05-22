@@ -19,9 +19,5 @@ public class Controller {
     public List<String> getProductName(@RequestParam("name") String name){
         return repository.getProductName(name);
     }
-
-    @GetMapping("/test")
-    public String test(@RequestParam("name") String name){
-        return name;
-    }
+    
 }

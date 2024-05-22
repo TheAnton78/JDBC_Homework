@@ -1,5 +1,6 @@
-GET http://localhost:8050/test?name=Ivan
-Accept: application/json
+
+
+
 
 ###
 GET http://localhost:8050/products/fetch-product?name=Олег
